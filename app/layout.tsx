@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Providers } from '@/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +13,10 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'DIEN',
+    title: 'DIEN Digital',
+  },
+  formatDetection: {
+    telephone: false,
   },
   icons: {
     icon: '/icons/icon-192.png',
@@ -31,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <head>
-        {/* Apple Touch Icon - ESSENCIAL para iOS */}
+        {/* Apple Touch Icons */}
         <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
         
         {/* Favicon padrão */}
@@ -47,7 +49,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0f172a" />
       </head>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

@@ -2,154 +2,158 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  ArrowLeft, Send, CheckCircle, BanIcon, MessageCircle, ArrowRight,
-  Shield, Users, Image, Mic, Video, Camera, Smile, Paperclip,
-  Clock, Lock, Globe, Download, Phone, FileText, Trash2, Star,
+  ArrowLeft, CheckCircle, BanIcon, TrendingUp, 
+  Wallet, PiggyBank, CreditCard, DollarSign, AlertTriangle,
+  Shield, Smartphone, Landmark, Receipt, Scale,
   Type, AlignJustify, ZoomIn, ZoomOut
 } from 'lucide-react';
 
 const perguntas = [
   {
-    pergunta: "O que significa um tique cinza (✓) no WhatsApp?",
-    opcoes: ["Mensagem lida", "Mensagem entregue", "Mensagem enviada", "Contato bloqueado"],
-    correta: 2,
-    explicacao: "Um tique cinza significa que a mensagem foi enviada do seu celular, mas ainda não chegou ao destinatário.",
-    icone: "✓"
-  },
-  {
-    pergunta: "O que significa dois tiques cinzas (✓✓) no WhatsApp?",
-    opcoes: ["Mensagem lida", "Mensagem entregue ao servidor", "Mensagem enviada", "Mensagem visualizada"],
-    correta: 1,
-    explicacao: "Dois tiques cinzas indicam que a mensagem foi entregue ao servidor do WhatsApp, mas o destinatário ainda não recebeu.",
-    icone: "✓✓"
-  },
-  {
-    pergunta: "O que significa dois tiques azuis (✓✓) no WhatsApp?",
-    opcoes: ["Mensagem enviada", "Mensagem entregue", "Mensagem lida", "Contato online"],
-    correta: 2,
-    explicacao: "Dois tiques azuis indicam que a mensagem foi lida pelo destinatário!",
-    icone: "✓✓💙"
-  },
-  {
-    pergunta: "Como criar um link de convite para grupo?",
+    pergunta: "Você recebeu uma mensagem no WhatsApp dizendo que ganhou R$ 5.000,00 em um sorteio que não participou. O que fazer?",
     opcoes: [
-      "Configurar grupo → Link de convite", 
-      "Adicionar participantes → Gerar link", 
-      "Informações do grupo → Convidar via link", 
-      "Todas as anteriores"
-    ],
-    correta: 3,
-    explicacao: "Todas essas formas permitem criar um link de convite para o grupo!",
-    icone: <Users size={24} />
-  },
-  {
-    pergunta: "O que é a criptografia de ponta a ponta?",
-    opcoes: [
-      "WhatsApp pode ler suas mensagens",
-      "Apenas você e o destinatário podem ler",
-      "Mensagens são públicas",
-      "Não há segurança nas conversas"
+      "Clicar no link e informar seus dados",
+      "Ignorar e denunciar como golpe",
+      "Pagar a taxa para liberar o prêmio",
+      "Compartilhar com os amigos"
     ],
     correta: 1,
-    explicacao: "A criptografia garante que só vocês dois tenham acesso às mensagens! 🔒",
-    icone: <Lock size={24} />
+    explicacao: "Golpistas usam prêmios falsos para roubar dados. Nunca clique em links suspeitos!",
+    icone: <AlertTriangle size={24} />
   },
   {
-    pergunta: "O ícone do microfone é utilizado para:",
-    opcoes: ["Enviar textos", "Enviar mensagens de voz", "Anexar arquivos", "Enviar um emoji"],
-    correta: 1,
-    explicacao: "O ícone do microfone permite gravar e enviar áudios.",
-    icone: <Mic className='animate-pulse' size={30} />
-  },
-  {
-    pergunta: "Como saber se alguém está online no WhatsApp?",
+    pergunta: "Qual o problema de pegar dinheiro com agiota?",
     opcoes: [
-      "Status 'Online' no topo da conversa",
-      "Tique azul imediato",
-      "Ícone de câmera verde",
-      "Não tem como saber"
+      "Juros baixos e tranquilos",
+      "Juros abusivos e ameaças",
+      "Não precisa comprovar renda",
+      "É a mesma coisa que banco"
+    ],
+    correta: 1,
+    explicacao: "Agiotas cobram juros extorsivos (às vezes 20% ao mês) e usam violência para cobrar.",
+    icone: <BanIcon size={24} />
+  },
+  {
+    pergunta: "O que significa 'apostas online' (bets)?",
+    opcoes: [
+      "Investimento seguro",
+      "Forma de ganhar dinheiro fácil",
+      "Jogos de azar que viciam",
+      "Economia para o futuro"
+    ],
+    correta: 2,
+    explicacao: "Bets são jogos de azar que causam vício e fazem pessoas perderem muito dinheiro.",
+    icone: <TrendingUp size={24} />
+  },
+  {
+    pergunta: "Comprar algo parcelado no cartão SEM JUROS é sempre uma boa ideia?",
+    opcoes: [
+      "Sim, sempre",
+      "Não, só se couber no orçamento",
+      "Sim, pois não paga juros",
+      "Não, nunca se deve parcelar"
+    ],
+    correta: 1,
+    explicacao: "Mesmo sem juros, parcelas comprometem sua renda futura. Só parcele se couber no bolso!",
+    icone: <CreditCard size={24} />
+  },
+  {
+    pergunta: "Uma oferta de 'investimento' promete 30% de retorno em 1 mês. Isso é:",
+    opcoes: [
+      "Investimento legítimo",
+      "Esquema de pirâmide/golpe",
+      "Fundo de ações seguro",
+      "Tesouro direto"
+    ],
+    correta: 1,
+    explicacao: "Retornos muito altos em pouco tempo são quase sempre golpes (pirâmide financeira).",
+    icone: <Shield size={24} />
+  },
+  {
+    pergunta: "Qual a melhor forma de guardar dinheiro para emergências?",
+    opcoes: [
+      "Na carteira",
+      "Em uma poupança ou conta separada",
+      "Emprestar para amigos",
+      "Investir em apostas"
+    ],
+    correta: 1,
+    explicacao: "Ter uma reserva de emergência em local seguro ajuda em imprevistos sem precisar de agiotas.",
+    icone: <PiggyBank size={24} />
+  },
+  {
+    pergunta: "Recebeu um e-mail do banco pedindo sua senha para 'atualizar cadastro'. O que fazer?",
+    opcoes: [
+      "Enviar a senha imediatamente",
+      "Clicar no link do e-mail",
+      "Não enviar e contatar o banco por canal oficial",
+      "Responder o e-mail com os dados"
+    ],
+    correta: 2,
+    explicacao: "Bancos NUNCA pedem senha por e-mail. É golpe de phishing!",
+    icone: <Smartphone size={24} />
+  },
+  {
+    pergunta: "Alguém te oferece um 'negócio da China' com lucro garantido. Isso é:",
+    opcoes: [
+      "Oportunidade única",
+      "Provavelmente um golpe",
+      "Investimento seguro",
+      "Indicação de amigo"
+    ],
+    correta: 1,
+    explicacao: "Nada no mundo financeiro tem lucro garantido. Desconfie de ofertas milagrosas!",
+    icone: <AlertTriangle size={24} />
+  },
+  {
+    pergunta: "Por que não se deve parcelar compras pequenas no cartão?",
+    opcoes: [
+      "Porque não pode",
+      "Pois acumulam jurando ocultos",
+      "O cartão não permite",
+      "É mais seguro à vista"
+    ],
+    correta: 1,
+    explicacao: "Mesmo parcelas pequenas, quando acumuladas, comprometem grande parte da sua renda futura.",
+    icone: <CreditCard size={24} />
+  },
+  {
+    pergunta: "Uma pessoa te pede dinheiro emprestado prometendo pagar depois. O que considerar?",
+    opcoes: [
+      "Só emprestar se for parente",
+      "Empresar sempre",
+      "Avaliar se pode perder o dinheiro",
+      "Cobrar juros de agiota"
+    ],
+    correta: 2,
+    explicacao: "Só empreste dinheiro que você pode perder. Amizades podem acabar por causa de dívidas.",
+    icone: <Scale size={24} />
+  },
+  {
+    pergunta: "Como identificar um esquema de pirâmide financeira?",
+    opcoes: [
+      "Promessa de lucros rápidos e altos",
+      "Indicação de famosos",
+      "Cadastro em aplicativo",
+      "Grupo no WhatsApp"
     ],
     correta: 0,
-    explicacao: "Quando a pessoa está online, aparece 'online' no topo da conversa.",
-    icone: <Globe size={24} />
+    explicacao: "Pirâmides prometem dinheiro fácil recrutando pessoas. Você perde dinheiro e amigos!",
+    icone: <AlertTriangle size={24} />
   },
   {
-    pergunta: "O que significa a câmera ao lado do nome?",
+    pergunta: "Qual o problema de jogar em bets (apostas esportivas)?",
     opcoes: [
-      "Está com a câmera aberta", 
-      "Está em uma chamada de vídeo", 
-      "Está no status", 
-      "Acabou de tirar uma foto"
+      "Pode viciar e causar perdas financeiras",
+      "É muito divertido",
+      "Dá para ganhar sempre",
+      "É investimento seguro"
     ],
-    correta: 2,
-    explicacao: "A câmera ao lado do nome indica que a pessoa está visualizando os status.",
-    icone: <Camera size={24} />
-  },
-  {
-    pergunta: "Como apagar uma mensagem para todos?",
-    opcoes: [
-      "Pressionar a tecla voltar do celular",
-      "Segurar mensagem → Apagar para mim",
-      "Segurar mensagem → Apagar para todos",
-      "Bloquear o contato"
-    ],
-    correta: 2,
-    explicacao: "Você tem até 1 hora para apagar uma mensagem para todos após enviá-la.",
-    icone: <Trash2 size={24} />
-  },
-  {
-    pergunta: "Qual o limite de tempo para apagar mensagem para todos?",
-    opcoes: ["15 minutos", "1 hora", "24 horas", "7 dias"],
-    correta: 1,
-    explicacao: "Após 1 hora, você só consegue apagar a mensagem para você mesmo.",
-    icone: <Clock size={24} />
-  },
-  {
-    pergunta: "O que é o 'Modo Avião' no WhatsApp?",
-    opcoes: [
-      "Ativar para não receber mensagens",
-      "Ler mensagens sem enviar confirmação de leitura",
-      "Voar no jogo do WhatsApp",
-      "Desativar criptografia"
-    ],
-    correta: 1,
-    explicacao: "Com o modo avião, você lê as mensagens sem enviar os tiques azuis de confirmação.",
-    icone: <Send size={24} />
-  },
-  {
-    pergunta: "Como silenciar notificações de um grupo?",
-    opcoes: [
-      "Sair do grupo",
-      "Bloquear o grupo", 
-      "Usar modo silencioso do grupo (Silenciar notificações)",
-      "Desinstalar WhatsApp"
-    ],
-    correta: 2,
-    explicacao: "Vá em Informações do Grupo → Silenciar notificações → Escolha o período.",
-    icone: <Bell size={24} />
+    correta: 0,
+    explicacao: "Bets causam vício em dopamina e fazem pessoas perderem dinheiro que não têm.",
+    icone: <TrendingUp size={24} />
   }
 ];
-
-// Ícone de sino
-function Bell({ size = 24, className = "" }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  );
-}
 
 // Componente de botões de acessibilidade
 function AcessibilidadeButtons({ 
@@ -169,7 +173,6 @@ function AcessibilidadeButtons({
 
   return (
     <div className="fixed z-50 bottom-4 right-4">
-      {/* Botão principal */}
       <button
         onClick={() => setMenuAberto(!menuAberto)}
         className="p-3 text-white transition-all duration-300 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700"
@@ -177,12 +180,10 @@ function AcessibilidadeButtons({
         <Type size={24} />
       </button>
 
-      {/* Menu de acessibilidade */}
       {menuAberto && (
         <div className="absolute bottom-16 right-0 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl space-y-2 min-w-[300px] animate-slide-up">
           <div className="px-2 mb-2 text-xs text-gray-500">Acessibilidade</div>
           
-          {/* Aumentar fonte */}
           <button
             onClick={() => {
               onIncreaseFont();
@@ -195,7 +196,6 @@ function AcessibilidadeButtons({
             <span className="ml-auto text-xs text-gray-400">{fontSize}px</span>
           </button>
 
-          {/* Diminuir fonte */}
           <button
             onClick={() => {
               onDecreaseFont();
@@ -207,7 +207,6 @@ function AcessibilidadeButtons({
             <span className="text-sm text-gray-700">Diminuir fonte</span>
           </button>
 
-          {/* Caixa alta */}
           <button
             onClick={() => {
               onToggleUppercase();
@@ -223,11 +222,28 @@ function AcessibilidadeButtons({
           </button>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes slide-up {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-slide-up {
+          animation: slide-up 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
 
-export default function ModuloWhatsApp() {
+export default function ModuloConscientizacaoFinanceira() {
   const [passo, setPasso] = useState(0);
   const [respostas, setRespostas] = useState<number[]>([]);
   const [mostrarResposta, setMostrarResposta] = useState(false);
@@ -246,7 +262,6 @@ export default function ModuloWhatsApp() {
     if (savedUppercase) setIsUppercase(JSON.parse(savedUppercase));
   }, []);
 
-  // Salvar preferências
   const handleIncreaseFont = () => {
     const newSize = Math.min(fontSize + 2, 32);
     setFontSize(newSize);
@@ -290,7 +305,6 @@ export default function ModuloWhatsApp() {
   const acertou = respostaSelecionada !== null && respostaSelecionada === perguntas[passo]?.correta;
   const finalizado = respostas.length === perguntas.length;
 
-  // Função para aplicar transformações de texto
   const transformText = (text: string) => {
     if (isUppercase) {
       return text.toUpperCase();
@@ -301,7 +315,7 @@ export default function ModuloWhatsApp() {
   if (finalizado) {
     const acertos = respostas.filter((r, i) => r === perguntas[i].correta).length;
     return (
-      <div className="flex items-center justify-center w-full h-screen p-4 bg-gradient-to-br from-green-600 to-emerald-800">
+      <div className="flex items-center justify-center w-full h-screen p-4 bg-gradient-to-br from-yellow-600 to-amber-700">
         <div className="w-full max-w-md p-8 text-center bg-white/10 backdrop-blur-lg rounded-2xl animate-fade-in" style={{ fontSize: `${fontSize}px` }}>
           <CheckCircle size={64} className="mx-auto mb-4 text-white" />
           <h2 className="mb-2 font-bold text-white" style={{ fontSize: `${fontSize + 8}px` }}>
@@ -312,16 +326,16 @@ export default function ModuloWhatsApp() {
           </p>
           <div className="mb-6 text-sm text-white/60">
             {acertos === perguntas.length ? (
-              transformText("🎉 Perfeito! Você é expert em WhatsApp!")
+              transformText("🎉 Excelente! Você sabe se proteger financeiramente!")
             ) : acertos >= perguntas.length / 2 ? (
-              transformText("👍 Bom trabalho! Continue praticando!")
+              transformText("👍 Bom trabalho! Continue aprendendo sobre finanças!")
             ) : (
-              transformText("💪 Continue aprendendo, você vai melhorar!")
+              transformText("💪 Vamos aprender mais sobre educação financeira!")
             )}
           </div>
           <button
             onClick={() => window.location.href = '/'}
-            className="w-full px-6 py-3 font-bold text-green-600 transition-all duration-300 bg-white rounded-full hover:scale-105"
+            className="w-full px-6 py-3 font-bold transition-all duration-300 bg-white rounded-full text-amber-600 hover:scale-105"
           >
             {transformText("Voltar ao Início")}
           </button>
@@ -333,7 +347,7 @@ export default function ModuloWhatsApp() {
   const perguntaAtual = perguntas[passo];
 
   return (
-    <div className="flex flex-col w-full h-screen bg-gradient-to-br from-green-600 to-emerald-800">
+    <div className="flex flex-col w-full h-screen bg-gradient-to-br from-yellow-600 to-amber-700">
       {/* Header */}
       <div className="px-4 py-3 bg-black/20 backdrop-blur-md">
         <div className="flex items-center gap-4">
@@ -345,7 +359,7 @@ export default function ModuloWhatsApp() {
           </button>
           <div className="flex-1">
             <h1 className="font-bold text-white" style={{ fontSize: `${fontSize}px` }}>
-              {transformText("WhatsApp na Prática")}
+              {transformText("Conscientização Financeira")}
             </h1>
             <div className="h-1.5 bg-white/20 rounded-full mt-2">
               <div 
@@ -365,10 +379,13 @@ export default function ModuloWhatsApp() {
         <div className="w-full max-w-2xl">
           {!mostrarResposta ? (
             <div className="space-y-6 animate-fade-in">
-              <div className='text-center'>Imagem</div>
+              <div className="text-center">
+                <div className="inline-flex p-4 rounded-full bg-white/20">
+                  <Wallet size={40} className="text-white" />
+                </div>
+              </div>
 
-              <div className="bg-[#075E54] rounded-2xl p-6 text-center">
-                {/* Ícone geral para outras perguntas */}
+              <div className="bg-[#1E3A5F] rounded-2xl p-6 text-center">
                 {typeof perguntaAtual.icone === 'object' && (
                   <div className="flex justify-center mb-4 text-white">
                     {perguntaAtual.icone}
@@ -388,7 +405,7 @@ export default function ModuloWhatsApp() {
                     className="w-full bg-white/10 backdrop-blur-sm p-4 items-center rounded-xl text-white font-bold text-left hover:bg-white/20 transition-all duration-300 flex gap-3 hover:scale-[1.02] active:scale-98"
                     style={{ fontSize: `${fontSize}px` }}
                   >
-                    <span className="font-bold text-white bg-[#075E54] px-3 py-1 rounded-full">
+                    <span className="font-bold text-white bg-[#1E3A5F] px-3 py-1 rounded-full">
                       {String.fromCharCode(65 + idx)}
                     </span>
                     <span>{transformText(opcao)}</span>
@@ -401,9 +418,15 @@ export default function ModuloWhatsApp() {
               acertou ? 'bg-green-600' : 'bg-red-500'
             }`} style={{ fontSize: `${fontSize}px` }}>
               {acertou ? (
-                <CheckCircle size={64} className="mx-auto mb-4 text-white" />
+                <>
+                  <CheckCircle size={64} className="mx-auto mb-4 text-white" />
+                  <div className="mb-4 text-3xl">🎉</div>
+                </>
               ) : (
-                <BanIcon size={64} className="mx-auto mb-4 text-white" />
+                <>
+                  <BanIcon size={64} className="mx-auto mb-4 text-white" />
+                  <div className="mb-4 text-3xl">💡</div>
+                </>
               )}
               <h3 className="mb-2 font-bold text-white" style={{ fontSize: `${fontSize + 6}px` }}>
                 {transformText(acertou ? 'Acertou!' : 'Ops, errou!')}
@@ -412,7 +435,13 @@ export default function ModuloWhatsApp() {
                 {transformText(perguntaAtual.explicacao)}
               </p>
               
-              {/* Botões de controle manual */}
+              {/* Dica extra para conscientização */}
+              {!acertou && (
+                <div className="mb-6 text-sm text-white/80">
+                  💰 {transformText("Educação financeira é a chave para evitar golpes e dívidas!")}
+                </div>
+              )}
+              
               <div className="flex gap-3">
                 {!acertou && (
                   <button
@@ -427,7 +456,7 @@ export default function ModuloWhatsApp() {
                   onClick={handleProxima}
                   className={`${
                     acertou ? 'w-full' : 'flex-1'
-                  } py-3 bg-white rounded-xl text-green-600 font-bold hover:bg-white/90 transition-all duration-300`}
+                  } py-3 bg-white rounded-xl text-amber-600 font-bold hover:bg-white/90 transition-all duration-300`}
                   style={{ fontSize: `${fontSize}px` }}
                 >
                   {transformText(passo === perguntas.length - 1 ? 'Finalizar' : 'Próxima Pergunta')}
@@ -470,27 +499,12 @@ export default function ModuloWhatsApp() {
           }
         }
         
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
         .animate-fade-in {
           animation: fade-in 0.3s ease-out;
         }
         
         .animate-scale-in {
           animation: scale-in 0.2s ease-out;
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.2s ease-out;
         }
         
         .active\\:scale-98:active {
