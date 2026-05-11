@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'DIEN Letramento Digital',
   description: 'Aprenda sobre tecnologia de forma prática e divertida',
-  manifest: '/manifest.json',
+  //manifest: '/manifest.json',
   themeColor: '#0f172a',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
   appleWebApp: {

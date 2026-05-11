@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { 
-  ArrowLeft, Send, CheckCircle, Phone, Video, 
+  ArrowLeft, Send, Check, CheckCheck, Phone, Video, 
   MoreVertical, Paperclip, Smile, Mic, 
   Activity, AlignJustify
 } from 'lucide-react';
@@ -418,16 +418,17 @@ export default function ModuloSimuladorAgendamento() {
   return (
     <div className="h-screen w-full bg-[#ECE5DD] flex flex-col">
       {/* Header WhatsApp */}
-      <div className="bg-[#075E54] text-white px-4 py-3 flex items-center justify-between shadow-lg flex-shrink-0">
-        <div className="flex items-center gap-3">
+      <div className="bg-[#075E54] text-white px-2 md:px-4 py-2 md:py-4 flex items-center justify-between shadow-lg flex-shrink-0">
+        <div className="flex items-center gap-1 md:gap-3">
           <button
             onClick={() => window.location.href = '/'}
             className="p-1 transition-colors rounded-full hover:bg-white/10"
           >
-            <ArrowLeft size={24} className="text-white" />
+            <ArrowLeft size={20} className="text-white md:hidden" />
+            <ArrowLeft size={24} className="hidden text-white md:block" />
           </button>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-[#25D366] rounded-full flex items-center justify-center">
               <Phone size={20} className="text-white" />
             </div>
             <div>
@@ -436,33 +437,40 @@ export default function ModuloSimuladorAgendamento() {
             </div>
           </div>
         </div>
-        <div className="flex gap-3">
-          <button className="p-2 transition-colors rounded-full hover:bg-white/10"><Video size={20} /></button>
-          <button className="p-2 transition-colors rounded-full hover:bg-white/10"><Phone size={20} /></button>
-          <button className="p-2 transition-colors rounded-full hover:bg-white/10"><MoreVertical size={20} /></button>
+        {/** Celular */}
+        <div className="flex gap-1 md:hidden md:gap-1">
+          <button className="p-1 transition-colors rounded-full hover:bg-white/10"><Video size={16} /></button>
+          <button className="p-1 transition-colors rounded-full hover:bg-white/10"><Phone size={16} /></button>
+          <button className="p-1 transition-colors rounded-full hover:bg-white/10"><MoreVertical size={16} /></button>
+        </div>
+        {/** Desktop */}
+        <div className="hidden gap-3 md:block md:gap-3">
+          <button className="px-3 transition-colors rounded-full hover:bg-white/10"><Video size={22} /></button>
+          <button className="px-3 transition-colors rounded-full hover:bg-white/10"><Phone size={20} /></button>
+          <button className="px-3 transition-colors rounded-full hover:bg-white/10"><MoreVertical size={20} /></button>
         </div>
       </div>
 
       {/* Área das Mensagens */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#ECE5DD]">
+      <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 bg-[#ECE5DD]">
         {mensagens.map((msg) => (
           <div
             key={msg.id}
             className={`flex ${msg.tipo === 'usuario' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl p-3 ${
+              className={`max-w-[85%] flex rounded-2xl p-1.5 ${
                 msg.tipo === 'usuario'
                   ? 'bg-[#DCF8C6] text-gray-800 rounded-tr-none'
                   : 'bg-white text-gray-800 rounded-tl-none shadow-sm'
-              } text-sm md:text-base`}
+              } text-sm md:text-lg`}
             >
-              <div className="break-words whitespace-pre-wrap">
+              <div className="mb-4 break-words whitespace-pre-wrap">
                 {transformText(msg.texto)}
               </div>
-              <div className="text-[10px] text-gray-400 mt-1 text-right flex items-center justify-end gap-1">
+              <div className="text-[10px] text-gray-400 flex justify-end items-end ml-1 mr-1">
                 {msg.timestamp}
-                {msg.tipo === 'usuario' && <span className="text-[#25D366]">✓✓</span>}
+                {msg.tipo === 'usuario' && <span className="text-[#25D366] ml-1 mb-1"><CheckCheck size={16} /></span>}
               </div>
             </div>
           </div>

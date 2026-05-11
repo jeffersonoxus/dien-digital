@@ -7,7 +7,8 @@ import {
   Wifi, Battery, Zap, Calendar,
   CalendarCheck, Activity, Wallet,
   Gamepad2, HelpCircle, Info,
-  Clock, CheckCircle
+  Clock, CheckCircle, Car, Navigation,
+  Mail, DollarSign
 } from 'lucide-react';
 
 interface Modulo {
@@ -32,6 +33,46 @@ const modulos: Modulo[] = [
     nivel: 'Iniciante',
     tipo: 'simulador',
     status: 'disponivel' // DISPONÍVEL
+  },
+  {
+    id: 'simulador-uber',
+    titulo: 'Simulador Uber',
+    descricao: 'Aprenda a pedir carros por aplicativo na prática',
+    icone: <Car size={32} />,
+    cor: 'from-gray-800 to-black',
+    nivel: 'Iniciante',
+    tipo: 'simulador',
+    status: 'disponivel' // DISPONÍVEL
+  },
+  {
+    id: 'email',
+    titulo: 'Simulador de E-mail',
+    descricao: 'Aprenda a usar o Gmail: escrever, anexar fotos e identificar golpes',
+    icone: <Mail size={32} />,
+    cor: 'from-red-600 to-orange-600',
+    nivel: 'Iniciante',
+    tipo: 'simulador',
+    status: 'disponivel'
+  },
+  {
+    id: 'govbr',
+    titulo: 'Simulador Gov.br',
+    descricao: 'Acesse serviços públicos digitais: CPF, INSS, Carteira de Trabalho e mais',
+    icone: <Shield size={32} />,
+    cor: 'from-blue-700 to-blue-900',
+    nivel: 'Intermediário',
+    tipo: 'simulador',
+    status: 'disponivel'
+  },
+  {
+    id: 'pix',
+    titulo: 'Simulador PIX',
+    descricao: 'Aprenda a fazer e receber PIX, usar Copia e Cola e evitar golpes',
+    icone: <DollarSign size={32} />,
+    cor: 'from-green-500 to-teal-600',
+    nivel: 'Iniciante',
+    tipo: 'simulador',
+    status: 'disponivel'
   },
   
   // QUIZZES
@@ -116,6 +157,29 @@ function Secao({ titulo, icone, cor, children }: {
   );
 }
 
+interface StatCardProps {
+  valor: string | number; // Pode ser texto como "6/10" ou número como 6
+  legenda: string;
+  corTexto: string;
+  delay?: string;        // O "?" indica que é opcional
+}
+
+function StatCard({ valor, legenda, corTexto, delay = "0" }: StatCardProps) {
+  return (
+    <div 
+      className="p-1 text-center transition-all duration-300 border md:p-4 bg-white/5 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/10"
+      style={{ animationDelay: delay }}
+    >
+      <div className={`text-lg md:text-2xl lg:text-3xl font-bold ${corTexto}`}>
+        {valor}
+      </div>
+      <div className="text-xs font-medium md:text-lg text-white/80">
+        {legenda}
+      </div>
+    </div>
+  );
+}
+
 // Componente de card do módulo
 function CardModulo({ modulo, onClick }: { modulo: Modulo; onClick: () => void }) {
   const isDisponivel = modulo.status === 'disponivel';
@@ -191,7 +255,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
 
-      <div className="px-4 pt-20 pb-12 mx-auto max-w-7xl">
+      <div className="px-4 pt-4 pb-12 mx-auto md:max-w-7xl lg:max-w-9xl md:pt-10">
         {/* Header */}
         <div className="mb-12 text-center animate-fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-white/5 backdrop-blur-sm">
@@ -207,23 +271,32 @@ export default function Home() {
         </div>
 
         {/* Estatísticas */}
-        <div className="grid max-w-3xl grid-cols-4 gap-4 mx-auto mb-12 animate-slide-up">
-          <div className="p-4 text-center transition-all duration-300 border bg-white/5 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/10">
-            <div className="text-2xl font-bold text-teal-400">{simuladores.length}</div>
-            <div className="text-xs font-medium text-white/80">Simuladores</div>
-          </div>
-          <div className="p-4 text-center transition-all duration-300 border bg-white/5 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/10">
-            <div className="text-2xl font-bold text-emerald-400">{quizzes.length}</div>
-            <div className="text-xs font-medium text-white/80">Quizzes</div>
-          </div>
-          <div className="p-4 text-center transition-all duration-300 border bg-white/5 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/10">
-            <div className="text-2xl font-bold text-blue-400">{informacoes.length}</div>
-            <div className="text-xs font-medium text-white/80">Informativos</div>
-          </div>
-          <div className="p-4 text-center transition-all duration-300 border bg-white/5 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/10">
-            <div className="text-2xl font-bold text-yellow-400">{disponiveis}/{total}</div>
-            <div className="text-xs font-medium text-white/80">Disponíveis</div>
-          </div>
+        <div className="grid grid-cols-2 gap-4 mx-auto mb-12 md:max-w-5xl lg:max-w-7xl md:grid-cols-4 animate-slide-up">
+          
+          <StatCard 
+            valor={simuladores.length} 
+            legenda="Simuladores" 
+            corTexto="text-teal-400" 
+          />
+
+          <StatCard 
+            valor={quizzes.length} 
+            legenda="Quizzes" 
+            corTexto="text-emerald-400" 
+          />
+
+          <StatCard 
+            valor={informacoes.length} 
+            legenda="Informativos" 
+            corTexto="text-blue-400" 
+          />
+
+          <StatCard 
+            valor={`${disponiveis}/${total}`} 
+            legenda="Disponíveis" 
+            corTexto="text-yellow-400" 
+          />
+
         </div>
 
         {/* Seção Simuladores */}
