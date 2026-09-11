@@ -5,7 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DIEN Letramento Digital',
+  title: 'EJA Letramento Digital',
   description: 'Aprenda sobre tecnologia de forma prática e divertida',
   //manifest: '/manifest.json',
   themeColor: '#0f172a',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'DIEN Digital',
+    title: 'EJA Letramento Digital',
   },
   formatDetection: {
     telephone: false,
@@ -42,7 +42,7 @@ export default function RootLayout({
         {/* Meta tags essenciais */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="DIEN" />
+        <meta name="apple-mobile-web-app-title" content="EJA Letramento Digital" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-TileColor" content="#0f172a" />
