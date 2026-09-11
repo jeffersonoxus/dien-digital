@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, X, ChevronRight, Copy, Check, Eye, EyeOff,
   QrCode, Smartphone, Key, Shield, Home, Clock, DollarSign,
-  User, AlertCircle, Bell, Activity, AlignJustify
+  User, AlertCircle, Bell
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 // ─── Tipos ────────────────────────────────────────────────
 type Tela =
@@ -122,32 +124,6 @@ function TecladoNumerico({
 }
 
 // ─── Botão de Acessibilidade ─────────────────────────────
-function AcessibilidadeBtn({
-  onToggle, isActive
-}: { onToggle: () => void; isActive: boolean }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="fixed z-50 bottom-24 right-4">
-      <button onClick={() => setOpen(!open)}
-        className="p-3 text-white bg-purple-600 rounded-full shadow-lg hover:bg-purple-700">
-        <Activity size={24} />
-      </button>
-      {open && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          className="absolute right-0 p-3 space-y-2 bg-white rounded-2xl shadow-xl bottom-16 min-w-[200px]">
-          <p className="px-2 text-xs text-gray-400">Acessibilidade</p>
-          <button onClick={() => { onToggle(); setOpen(false); }}
-            className="flex items-center w-full gap-3 px-3 py-2 rounded-xl hover:bg-gray-100">
-            <AlignJustify size={18} className="text-purple-600" />
-            <span className="text-sm text-gray-700">Texto em CAIXA ALTA</span>
-            {isActive && <span className="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Ativo</span>}
-          </button>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
 // ─── COMPONENTE PRINCIPAL ─────────────────────────────────
 export default function SimuladorPix() {
   const [tela, setTela] = useState<Tela>('home');
@@ -232,9 +208,7 @@ export default function SimuladorPix() {
       {/* Barra superior */}
       <div className="px-5 pt-12 pb-6 text-white bg-gradient-to-br from-orange-600 to-orange-700">
         <div className="flex items-center justify-between mb-6">
-          <button onClick={() => window.location.href = '/'} className="p-1">
-            <ArrowLeft size={24} className="text-white" />
-          </button>
+          <BotaoVoltar />
           <div className="flex gap-3">
             <button className="p-1"><Eye size={22} className="text-white/80" /></button>
             <button className="p-1"><Bell size={22} className="text-white/80" /></button>
@@ -946,7 +920,12 @@ export default function SimuladorPix() {
         {tela === 'comprovante' && (<motion.div key="comprovante" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -100, opacity: 0 }} className="h-full"><TelaComprovante /></motion.div>)}
       </AnimatePresence>
 
-      <AcessibilidadeBtn onToggle={toggleUppercase} isActive={isUppercase} />
+      <BotaoAcessibilidade
+        onToggleMaiusculo={toggleUppercase}
+        maiusculoAtivo={isUppercase}
+        cor="bg-purple-600 hover:bg-purple-700"
+        posicao="bottom-24 right-4"
+      />
     </div>
   );
 }

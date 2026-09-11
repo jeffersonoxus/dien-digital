@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Smartphone, MessageCircle, Shield, 
-  TrendingUp, BookOpen, ChevronRight, 
-  Wifi, Battery, Zap, Calendar,
-  CalendarCheck, Activity, Wallet,
+import Link from 'next/link';
+import {
+  Smartphone, MessageCircle, Shield,
+  TrendingUp, BookOpen, ChevronRight,
+  CalendarCheck, Wallet,
   Gamepad2, HelpCircle, Info,
-  Clock, CheckCircle, Car, Navigation,
+  Clock, CheckCircle, Car,
   Mail, DollarSign
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
 
 interface Modulo {
   id: string;
@@ -181,68 +181,67 @@ function StatCard({ valor, legenda, corTexto, delay = "0" }: StatCardProps) {
 }
 
 // Componente de card do módulo
-function CardModulo({ modulo, onClick }: { modulo: Modulo; onClick: () => void }) {
+function CardModulo({ modulo }: { modulo: Modulo }) {
   const isDisponivel = modulo.status === 'disponivel';
-  
-  return (
-    <div
-      onClick={isDisponivel ? onClick : undefined}
-      className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${modulo.cor} p-[2px] transition-all duration-300 ${
-        isDisponivel 
-          ? 'cursor-pointer hover:scale-105 hover:shadow-2xl active:scale-95' 
-          : 'cursor-not-allowed opacity-60'
-      }`}
-    >
-      <div className="h-full p-6 transition-all duration-300 bg-slate-900/90 backdrop-blur-sm rounded-2xl">
-        <div className="flex items-start justify-between mb-4">
-          <div className={`text-white transition-transform duration-300 ${isDisponivel ? 'hover:scale-105' : ''}`}>
-            {modulo.icone}
-          </div>
-          <div className="flex gap-2">
-            {/* Badge de status */}
-            {modulo.status === 'disponivel' ? (
-              <span className="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded-full bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                <CheckCircle size={12} />
-                Disponível
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-yellow-400 border rounded-full bg-yellow-500/20 border-yellow-500/30">
-                <Clock size={12} />
-                Em breve
-              </span>
-            )}
-            
-            {/* Badge de nível */}
-            <span className="px-2 py-1 text-xs font-medium text-white border rounded-full bg-white/20 border-white/30">
-              {modulo.nivel}
+
+  const conteudo = (
+    <div className="h-full p-6 transition-all duration-300 bg-slate-900/90 backdrop-blur-sm rounded-2xl">
+      <div className="flex items-start justify-between mb-4">
+        <div className={`text-white transition-transform duration-300 ${isDisponivel ? 'hover:scale-105' : ''}`}>
+          {modulo.icone}
+        </div>
+        <div className="flex gap-2">
+          {/* Badge de status */}
+          {modulo.status === 'disponivel' ? (
+            <span className="flex items-center gap-1 px-2 py-1 text-xs font-medium border rounded-full bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+              <CheckCircle size={12} />
+              Disponível
             </span>
-          </div>
+          ) : (
+            <span className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-yellow-400 border rounded-full bg-yellow-500/20 border-yellow-500/30">
+              <Clock size={12} />
+              Em breve
+            </span>
+          )}
+
+          {/* Badge de nível */}
+          <span className="px-2 py-1 text-xs font-medium text-white border rounded-full bg-white/20 border-white/30">
+            {modulo.nivel}
+          </span>
         </div>
-        
-        <h3 className="mb-2 text-xl font-bold text-white">{modulo.titulo}</h3>
-        <p className="mb-4 text-sm text-white/80">{modulo.descricao}</p>
-        
-        <div className="flex justify-end mt-4">
-          <ChevronRight size={20} className={`text-white/40 transition-transform duration-300 ${isDisponivel ? 'group-hover:translate-x-1' : ''}`} />
-        </div>
-        
       </div>
+
+      <h3 className="mb-2 text-xl font-bold text-white">{modulo.titulo}</h3>
+      <p className="mb-4 text-sm text-white/80">{modulo.descricao}</p>
+
+      <div className="flex justify-end mt-4">
+        <ChevronRight size={20} className={`text-white/40 transition-transform duration-300 ${isDisponivel ? 'group-hover:translate-x-1' : ''}`} />
+      </div>
+    </div>
+  );
+
+  const classeBase = `relative rounded-2xl overflow-hidden bg-gradient-to-br ${modulo.cor} p-[2px] transition-all duration-300 ${
+    isDisponivel
+      ? 'cursor-pointer hover:scale-105 hover:shadow-2xl active:scale-95'
+      : 'cursor-not-allowed opacity-60'
+  }`;
+
+  if (isDisponivel) {
+    return (
+      <Link href={`/modulos/${modulo.id}`} className={classeBase} aria-label={`Abrir módulo ${modulo.titulo}`}>
+        {conteudo}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={classeBase} aria-disabled="true">
+      {conteudo}
     </div>
   );
 }
 
 export default function Home() {
-  const [moduloSelecionado, setModuloSelecionado] = useState<string | null>(null);
-
-  const handleModuloClick = (moduloId: string) => {
-    setModuloSelecionado(moduloId);
-  };
-
-  if (moduloSelecionado) {
-    const ModuloComponent = require(`./modulos/${moduloSelecionado}/page`).default;
-    return <ModuloComponent />;
-  }
-
   // Separar módulos por tipo e status
   const simuladores = modulos.filter(m => m.tipo === 'simulador');
   const quizzes = modulos.filter(m => m.tipo === 'quiz');
@@ -303,11 +302,7 @@ export default function Home() {
         {simuladores.length > 0 && (
           <Secao titulo="Simuladores" icone={<Gamepad2 size={28} />} cor="from-teal-500 to-cyan-600">
             {simuladores.map((modulo) => (
-              <CardModulo 
-                key={modulo.id} 
-                modulo={modulo} 
-                onClick={() => handleModuloClick(modulo.id)} 
-              />
+              <CardModulo key={modulo.id} modulo={modulo} />
             ))}
           </Secao>
         )}
@@ -316,11 +311,7 @@ export default function Home() {
         {quizzes.length > 0 && (
           <Secao titulo="Quizzes" icone={<HelpCircle size={28} />} cor="from-emerald-500 to-green-600">
             {quizzes.map((modulo) => (
-              <CardModulo 
-                key={modulo.id} 
-                modulo={modulo} 
-                onClick={() => handleModuloClick(modulo.id)} 
-              />
+              <CardModulo key={modulo.id} modulo={modulo} />
             ))}
           </Secao>
         )}
@@ -329,11 +320,7 @@ export default function Home() {
         {informacoes.length > 0 && (
           <Secao titulo="Informativos" icone={<Info size={28} />} cor="from-blue-500 to-cyan-600">
             {informacoes.map((modulo) => (
-              <CardModulo 
-                key={modulo.id} 
-                modulo={modulo} 
-                onClick={() => handleModuloClick(modulo.id)} 
-              />
+              <CardModulo key={modulo.id} modulo={modulo} />
             ))}
           </Secao>
         )}
@@ -361,6 +348,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <BotaoAcessibilidade cor="bg-emerald-600 hover:bg-emerald-700" posicao="bottom-4 right-4" />
 
       <style jsx>{`
         @keyframes fade-in {

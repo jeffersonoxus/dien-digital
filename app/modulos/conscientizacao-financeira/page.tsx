@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  ArrowLeft, CheckCircle, BanIcon, TrendingUp, 
+import {
+  CheckCircle, BanIcon, TrendingUp,
   Wallet, PiggyBank, CreditCard, DollarSign, AlertTriangle,
   Shield, Smartphone, Landmark, Receipt, Scale,
   Type, AlignJustify, ZoomIn, ZoomOut
 } from 'lucide-react';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 const perguntas = [
   {
@@ -333,12 +334,12 @@ export default function ModuloConscientizacaoFinanceira() {
               transformText("💪 Vamos aprender mais sobre educação financeira!")
             )}
           </div>
-          <button
-            onClick={() => window.location.href = '/'}
-            className="w-full px-6 py-3 font-bold transition-all duration-300 bg-white rounded-full text-amber-600 hover:scale-105"
+          <BotaoVoltar
+            className="block w-full px-6 py-3 font-bold text-center transition-all duration-300 bg-white rounded-full text-amber-600 hover:scale-105"
+            label="Voltar ao Início"
           >
             {transformText("Voltar ao Início")}
-          </button>
+          </BotaoVoltar>
         </div>
       </div>
     );
@@ -351,12 +352,7 @@ export default function ModuloConscientizacaoFinanceira() {
       {/* Header */}
       <div className="px-4 py-3 bg-black/20 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => window.location.href = '/'}
-            className="p-2 transition-colors rounded-full hover:bg-white/10"
-          >
-            <ArrowLeft size={24} className="text-white" />
-          </button>
+          <BotaoVoltar className="p-2 transition-colors rounded-full hover:bg-white/10" />
           <div className="flex-1">
             <h1 className="font-bold text-white" style={{ fontSize: `${fontSize}px` }}>
               {transformText("Conscientização Financeira")}

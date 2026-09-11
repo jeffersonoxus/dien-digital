@@ -5,8 +5,10 @@ import {
   ArrowLeft, Search, Star, Archive, Trash2, Mail,
   Paperclip, Image, X, ChevronRight, Send, MoreVertical,
   AlertTriangle, Check, Shield, Edit3,
-  User, Users, ShoppingBag, Activity, AlignJustify, Bell
+  User, Users, ShoppingBag, Bell
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 // ─── Tipos ────────────────────────────────────────────────
 type Tela = 'home' | 'ler' | 'escrever' | 'enviado' | 'anexo' | 'suspeito' | 'suspeito-teste';
@@ -79,34 +81,6 @@ const CAIXA_ENTRADA: Email[] = [
   },
 ];
 
-// ─── Acessibilidade ──────────────────────────────────────
-function BtnAcessibilidade({ onToggle, isActive }: { onToggle: () => void; isActive: boolean }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="fixed z-50 bottom-24 right-4">
-      <button onClick={() => setOpen(!open)}
-        className="p-3 text-white bg-red-600 rounded-full shadow-lg hover:bg-red-700">
-        <Activity size={24} />
-      </button>
-      {open && (
-        <div className="absolute right-0 p-3 space-y-2 bg-white rounded-2xl shadow-xl bottom-16 min-w-[200px] animate-slide-up">
-          <p className="px-2 text-xs text-gray-400">Acessibilidade</p>
-          <button onClick={() => { onToggle(); setOpen(false); }}
-            className="flex items-center w-full gap-3 px-3 py-2 rounded-xl hover:bg-gray-100">
-            <AlignJustify size={18} className="text-red-600" />
-            <span className="text-sm text-gray-700">Texto em CAIXA ALTA</span>
-            {isActive && <span className="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Ativo</span>}
-          </button>
-        </div>
-      )}
-      <style jsx>{`
-        .animate-slide-up { animation: slideUp 0.2s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
-    </div>
-  );
-}
-
 // ─── COMPONENTES DE TELA ─────────────────────────────────
 
 function TelaHome({ onAbrirEmail, onEscrever, txt, categoriaAtiva, setCategoriaAtiva }: {
@@ -128,9 +102,7 @@ function TelaHome({ onAbrirEmail, onEscrever, txt, categoriaAtiva, setCategoriaA
   return (
     <div className="flex flex-col h-full bg-white">
       <div className="flex items-center justify-between px-4 py-3 bg-red-600">
-        <button onClick={() => window.location.href = '/'} className="p-1">
-          <ArrowLeft size={24} className="text-white" />
-        </button>
+        <BotaoVoltar />
         <h1 className="text-lg font-bold text-white">Gmail</h1>
         <button className="p-1"><Search size={22} className="text-white" /></button>
       </div>
@@ -664,7 +636,12 @@ export default function SimuladorEmail() {
     <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
       style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       {renderTela()}
-      <BtnAcessibilidade onToggle={toggleUppercase} isActive={isUppercase} />
+      <BotaoAcessibilidade
+        onToggleMaiusculo={toggleUppercase}
+        maiusculoAtivo={isUppercase}
+        cor="bg-red-600 hover:bg-red-700"
+        posicao="bottom-24 right-4"
+      />
     </div>
   );
 }

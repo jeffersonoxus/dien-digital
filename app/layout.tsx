@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   title: 'EJA Letramento Digital',
   description: 'Aprenda sobre tecnologia de forma prática e divertida',
   //manifest: '/manifest.json',
-  themeColor: '#0f172a',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -21,8 +19,14 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icons/icon-192.png',
     apple: '/icons/apple-icon-180.png',
-    shortcut: '/icons/favicon.png',
+    shortcut: '/icons/icon-96.png',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f172a',
 };
 
 export default function RootLayout({
@@ -37,7 +41,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
         
         {/* Favicon padrão */}
-        <link rel="icon" type="image/png" href="/icons/favicon.png" />
+        <link rel="icon" type="image/png" href="/icons/icon-96.png" />
         
         {/* Meta tags essenciais */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -46,7 +50,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-TileColor" content="#0f172a" />
-        <meta name="theme-color" content="#0f172a" />
       </head>
       <body className={inter.className}>
         {children}

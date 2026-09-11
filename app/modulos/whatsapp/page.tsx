@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  ArrowLeft, Send, CheckCircle, BanIcon, MessageCircle, ArrowRight,
+import {
+  Send, CheckCircle, BanIcon, MessageCircle, ArrowRight,
   Shield, Users, Image, Mic, Video, Camera, Smile, Paperclip,
   Clock, Lock, Globe, Download, Phone, FileText, Trash2, Star,
   Type, AlignJustify, ZoomIn, ZoomOut
 } from 'lucide-react';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 const perguntas = [
   {
@@ -319,12 +320,12 @@ export default function ModuloWhatsApp() {
               transformText("💪 Continue aprendendo, você vai melhorar!")
             )}
           </div>
-          <button
-            onClick={() => window.location.href = '/'}
-            className="w-full px-6 py-3 font-bold text-green-600 transition-all duration-300 bg-white rounded-full hover:scale-105"
+          <BotaoVoltar
+            className="block w-full px-6 py-3 font-bold text-center text-green-600 transition-all duration-300 bg-white rounded-full hover:scale-105"
+            label="Voltar ao Início"
           >
             {transformText("Voltar ao Início")}
-          </button>
+          </BotaoVoltar>
         </div>
       </div>
     );
@@ -337,12 +338,7 @@ export default function ModuloWhatsApp() {
       {/* Header */}
       <div className="px-4 py-3 bg-black/20 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => window.location.href = '/'}
-            className="p-2 transition-colors rounded-full hover:bg-white/10"
-          >
-            <ArrowLeft size={24} className="text-white" />
-          </button>
+          <BotaoVoltar className="p-2 transition-colors rounded-full hover:bg-white/10" />
           <div className="flex-1">
             <h1 className="font-bold text-white" style={{ fontSize: `${fontSize}px` }}>
               {transformText("WhatsApp na Prática")}

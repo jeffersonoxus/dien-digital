@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { 
-  ArrowLeft, Send, Check, CheckCheck, Phone, Video, 
-  MoreVertical, Paperclip, Smile, Mic, 
-  Activity, AlignJustify
+import {
+  ArrowLeft, Send, Check, CheckCheck, Phone, Video,
+  MoreVertical, Paperclip, Smile, Mic
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 interface Mensagem {
   id: number;
@@ -21,65 +22,6 @@ interface DadosAgendamento {
   tipoExame?: string;
   unidade?: string;
   cpf?: string;
-}
-
-// Componente de botões de acessibilidade (apenas caixa alta)
-function AcessibilidadeButtons({ 
-  onToggleUppercase,
-  isUppercase 
-}: { 
-  onToggleUppercase: () => void;
-  isUppercase: boolean;
-}) {
-  const [menuAberto, setMenuAberto] = useState(false);
-
-  return (
-    <div className="fixed z-50 bottom-20 right-4">
-      <button
-        onClick={() => setMenuAberto(!menuAberto)}
-        className="p-3 text-white transition-all duration-300 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700"
-      >
-        <Activity size={24} />
-      </button>
-
-      {menuAberto && (
-        <div className="absolute bottom-16 right-0 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl space-y-2 min-w-[180px] animate-slide-up">
-          <div className="px-2 mb-2 text-xs text-gray-500">Acessibilidade</div>
-          
-          <button
-            onClick={() => {
-              onToggleUppercase();
-              setMenuAberto(false);
-            }}
-            className="flex items-center w-full gap-3 px-3 py-2 transition-colors rounded-xl hover:bg-gray-100"
-          >
-            <AlignJustify size={18} className="text-blue-600" />
-            <span className="text-sm text-gray-700">Texto em CAIXA ALTA</span>
-            {isUppercase && (
-              <span className="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Ativo</span>
-            )}
-          </button>
-        </div>
-      )}
-
-      <style jsx>{`
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.2s ease-out;
-        }
-      `}</style>
-    </div>
-  );
 }
 
 export default function ModuloSimuladorAgendamento() {
@@ -403,12 +345,12 @@ export default function ModuloSimuladorAgendamento() {
             >
               🔄 Fazer Nova Simulação
             </button>
-            <button
-              onClick={() => window.location.href = '/'}
-              className="w-full px-6 py-3 font-bold text-green-600 transition-all duration-300 bg-white rounded-full hover:bg-white/90"
+            <BotaoVoltar
+              className="block w-full px-6 py-3 font-bold text-center text-green-600 transition-all duration-300 bg-white rounded-full hover:bg-white/90"
+              label="Voltar ao Início"
             >
               Voltar ao Início
-            </button>
+            </BotaoVoltar>
           </div>
         </div>
       </div>
@@ -420,13 +362,10 @@ export default function ModuloSimuladorAgendamento() {
       {/* Header WhatsApp */}
       <div className="bg-[#075E54] text-white px-2 md:px-4 py-2 md:py-4 flex items-center justify-between shadow-lg flex-shrink-0">
         <div className="flex items-center gap-1 md:gap-3">
-          <button
-            onClick={() => window.location.href = '/'}
-            className="p-1 transition-colors rounded-full hover:bg-white/10"
-          >
+          <BotaoVoltar className="p-1 transition-colors rounded-full hover:bg-white/10">
             <ArrowLeft size={20} className="text-white md:hidden" />
             <ArrowLeft size={24} className="hidden text-white md:block" />
-          </button>
+          </BotaoVoltar>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-[#25D366] rounded-full flex items-center justify-center">
               <Phone size={20} className="text-white" />
@@ -517,9 +456,11 @@ export default function ModuloSimuladorAgendamento() {
         </div>
       </div>
 
-      <AcessibilidadeButtons 
-        onToggleUppercase={handleToggleUppercase}
-        isUppercase={isUppercase}
+      <BotaoAcessibilidade
+        onToggleMaiusculo={handleToggleUppercase}
+        maiusculoAtivo={isUppercase}
+        cor="bg-blue-600 hover:bg-blue-700"
+        posicao="bottom-20 right-4"
       />
 
       <style jsx>{`

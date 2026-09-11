@@ -4,9 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   ArrowLeft, X, ChevronRight, Star, MapPin, Clock,
   Navigation, Car, Shield, Phone, MessageCircle,
-  User, Search, Activity, AlignJustify, Home, Briefcase,
-  GraduationCap, Heart, DollarSign, Bike
+  User, Search, Home, Briefcase,
+  GraduationCap, Heart, DollarSign, Bike, Info
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 // ─── Tipos ────────────────────────────────────────────────
 type Tela = 'home' | 'destino' | 'buscando' | 'aCaminho' | 'viagem' | 'chegou';
@@ -67,7 +69,7 @@ const OPCOES: OpcaoViagem[] = [
   { id: 'comfort', nome: 'Comfort', info: 'Carro mais novo, mais espaco', multiplicador: 1.4,
     icone: <div className="flex items-center justify-center w-10 h-10 bg-blue-700 rounded-xl"><Car size={22} className="text-white" /></div> },
   { id: 'black', nome: 'Black', info: 'Premium, maximo conforto', multiplicador: 2.2,
-    icone: <div className="flex items-center justify-center w-10 h-10 bg-black rounded-xl border border-gray-600"><Star size={22} className="text-white" fill="#fff" /></div> },
+    icone: <div className="flex items-center justify-center w-10 h-10 bg-black border border-gray-600 rounded-xl"><Star size={22} className="text-white" fill="#fff" /></div> },
   { id: 'moto', nome: 'Moto', info: '1 pessoa, mais rapido', multiplicador: 0.6,
     icone: <div className="flex items-center justify-center w-10 h-10 bg-green-600 rounded-xl"><Bike size={22} className="text-white" /></div> },
 ];
@@ -86,7 +88,7 @@ function getPrecoBase(origem: Local, destino: Local): number {
   const dist = mesmaCidade ? 12 : 28;
   const hora = new Date().getHours();
   const multiplicadorHorario = (hora >= 7 && hora <= 9) || (hora >= 17 && hora <= 19) ? 1.5 : 1.0;
-  return Math.round(dist * 1.45 * multiplicadorHorario * 100) / 100;
+  return Math.round(dist * 1.45 * multiplicadorHorario * 0.5 * 100) / 100;
 }
 
 function getTempoEstimado(origem: Local, destino: Local): string {
@@ -100,7 +102,7 @@ function getTempoEstimado(origem: Local, destino: Local): string {
 // ─── Mapa SVG ─────────────────────────────────────────────
 function MapaFundo({ origem, destino, className }: { origem?: Local; destino?: Local; className?: string }) {
   return (
-    <div className={`relative overflow-hidden ${className || ''}`} style={{ background: '#e8e4dc' }}>
+    <div className={`overflow-hidden ${className || ''}`} style={{ background: '#e8e4dc' }}>
       <svg className="absolute inset-0 w-full h-full opacity-60" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice">
         {/* Ruas horizontais principais */}
         <line x1="0" y1="80" x2="400" y2="80" stroke="#fff" strokeWidth="3" />
@@ -145,7 +147,7 @@ function MapaFundo({ origem, destino, className }: { origem?: Local; destino?: L
       <div className="absolute z-10 transform -translate-x-1/2 -translate-y-1/2" style={{ top: '52%', left: '30%' }}>
         <div className="relative">
           <div className="absolute w-10 h-10 bg-blue-300 rounded-full opacity-30 animate-ping" />
-          <div className="w-5 h-5 bg-blue-600 rounded-full border-2 border-white shadow-lg" />
+          <div className="w-5 h-5 bg-blue-600 border-2 border-white rounded-full shadow-lg" />
         </div>
       </div>
 
@@ -166,30 +168,12 @@ function MapaFundo({ origem, destino, className }: { origem?: Local; destino?: L
   );
 }
 
-// ─── Acessibilidade ──────────────────────────────────────
-function BtnAcessibilidade({ onToggle, isActive }: { onToggle: () => void; isActive: boolean }) {
-  const [open, setOpen] = useState(false);
+// ─── Aviso para o professor ───────────────────────────────
+function AvisoProfessor({ children }: { children: React.ReactNode }) {
   return (
-    <div className="fixed z-50 bottom-24 right-4">
-      <button onClick={() => setOpen(!open)}
-        className="p-3 text-white bg-gray-800 rounded-full shadow-lg hover:bg-gray-900">
-        <Activity size={24} />
-      </button>
-      {open && (
-        <div className="absolute right-0 p-3 space-y-2 bg-white rounded-2xl shadow-xl bottom-16 min-w-[200px] animate-slide-up">
-          <p className="px-2 text-xs text-gray-400">Acessibilidade</p>
-          <button onClick={() => { onToggle(); setOpen(false); }}
-            className="flex items-center w-full gap-3 px-3 py-2 rounded-xl hover:bg-gray-100">
-            <AlignJustify size={18} className="text-gray-700" />
-            <span className="text-sm text-gray-700">Texto em CAIXA ALTA</span>
-            {isActive && <span className="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Ativo</span>}
-          </button>
-        </div>
-      )}
-      <style jsx>{`
-        .animate-slide-up { animation: slideUp 0.2s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
+    <div className="flex items-start gap-2 p-3 text-sm border shadow-sm bg-amber-50 border-amber-200 rounded-xl text-amber-900">
+      <Info size={18} className="flex-shrink-0 mt-0.5 text-amber-600" />
+      <p><span className="font-semibold">Para o professor: </span>{children}</p>
     </div>
   );
 }
@@ -205,6 +189,8 @@ export default function SimuladorUber() {
   const [pagamento, setPagamento] = useState('pix');
   const [progresso, setProgresso] = useState(0);
   const [avaliacao, setAvaliacao] = useState(5);
+  const [motoristaEncontrado, setMotoristaEncontrado] = useState(false);
+  const [chatAberto, setChatAberto] = useState(false);
   const [isUppercase, setIsUppercase] = useState(false);
 
   useEffect(() => {
@@ -228,22 +214,22 @@ export default function SimuladorUber() {
 
   const opcaoAtual = OPCOES.find(o => o.id === opcaoId) || OPCOES[0];
 
-  // Viagem - barra de progresso
+  // Viagem - barra de progresso (ao chegar a 100%, aguarda confirmacao do usuario)
   useEffect(() => {
     if (tela !== 'viagem') return;
     const interval = setInterval(() => {
       setProgresso(p => {
-        if (p >= 100) { clearInterval(interval); setTela('chegou'); return 100; }
+        if (p >= 100) { clearInterval(interval); return 100; }
         return p + 1;
       });
     }, 200);
     return () => clearInterval(interval);
   }, [tela]);
 
-  // Buscando -> motorista a caminho
+  // Buscando -> motorista encontrado (usuario confirma manualmente para avancar)
   useEffect(() => {
-    if (tela !== 'buscando') return;
-    const timeout = setTimeout(() => setTela('aCaminho'), 5000);
+    if (tela !== 'buscando') { setMotoristaEncontrado(false); return; }
+    const timeout = setTimeout(() => setMotoristaEncontrado(true), 3000);
     return () => clearTimeout(timeout);
   }, [tela]);
 
@@ -262,15 +248,25 @@ export default function SimuladorUber() {
 
   if (tela === 'home') {
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <MapaFundo origem={ORIGEM} destino={destino || undefined} className="absolute inset-0" />
 
         {/* Botao voltar flutuante */}
-        <button onClick={() => window.location.href = '/'}
-          className="absolute z-20 flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg top-4 left-4 hover:bg-gray-100">
-          <ArrowLeft size={22} className="text-gray-700" />
-        </button>
+        <BotaoVoltar
+          className="absolute z-20 flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg top-4 left-4 hover:bg-gray-100"
+          size={22}
+          corIcone="text-gray-700"
+        />
+
+        {/* Aviso para o professor, sobre o mapa */}
+        <div className="absolute z-10 left-4 right-4 top-20">
+          <AvisoProfessor>
+            {!destino
+              ? 'Esta é a tela inicial do app de transporte. O mapa mostra a localização atual do aluno. Toque em "Meu local" para escolher o destino da viagem.'
+              : 'Nessa tela, o usuário escolhe a modalidade de transporte e o tipo de pagamento.'}
+          </AvisoProfessor>
+        </div>
 
         {!destino ? (
           /* Home sem destino */
@@ -279,10 +275,10 @@ export default function SimuladorUber() {
               <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                 <User size={20} className="text-gray-600" />
               </div>
-              <p className="font-semibold text-gray-800">{txt('Ola, bom dia!')}</p>
+              <p className="font-semibold text-gray-800">{txt('Ola, tudo bem?')}</p>
             </div>
             <button onClick={() => { setBusca(''); setTela('destino'); }}
-              className="flex items-center gap-3 w-full p-4 bg-gray-50 rounded-2xl hover:bg-gray-100">
+              className="flex items-center w-full gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100">
               <div className="flex flex-col items-center gap-0.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
                 <div className="w-0.5 h-7 bg-gray-300" />
@@ -290,7 +286,7 @@ export default function SimuladorUber() {
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-medium text-gray-800 truncate">{txt(ORIGEM.endereco)}</p>
-                <p className="text-xs text-gray-400">{txt('Para onde?')}</p>
+                <p className="text-xs text-gray-400">{txt('Meu local')}</p>
               </div>
               <ChevronRight size={18} className="text-gray-300" />
             </button>
@@ -308,7 +304,7 @@ export default function SimuladorUber() {
                 <p className="text-xs text-gray-400 truncate">{txt(destino.endereco)}</p>
               </div>
             </div>
-            <div className="space-y-2 mb-4">
+            <div className="mb-4 space-y-2">
               {OPCOES.map(op => {
                 const preco = Math.round(precoBase * op.multiplicador * 100) / 100;
                 return (
@@ -352,19 +348,24 @@ export default function SimuladorUber() {
             </div>
 
             <button onClick={() => { setProgresso(0); setTela('buscando'); }}
-              className="w-full py-4 text-lg font-bold text-white bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95 transition-all">
+              className="w-full py-4 text-lg font-bold text-white transition-all bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95">
               {txt(`Confirmar ${opcaoAtual.nome.toUpperCase()}`)}
             </button>
           </div>
         )}
-        <BtnAcessibilidade onToggle={toggleUppercase} isActive={isUppercase} />
+        <BotaoAcessibilidade
+          onToggleMaiusculo={toggleUppercase}
+          maiusculoAtivo={isUppercase}
+          cor="bg-gray-800 hover:bg-gray-900"
+          posicao="bottom-24 right-4"
+        />
       </div>
     );
   }
 
   if (tela === 'destino') {
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div className="px-4 pt-4 pb-2">
           <div className="flex items-center gap-2 mb-4">
@@ -372,6 +373,11 @@ export default function SimuladorUber() {
               <ArrowLeft size={24} className="text-gray-700" />
             </button>
             <h1 className="text-lg font-bold text-gray-800">{txt('Para onde?')}</h1>
+          </div>
+          <div className="mb-3">
+            <AvisoProfessor>
+              Aqui o usuário escolhe o destino para onde quer se deslocar.
+            </AvisoProfessor>
           </div>
           <div className="flex items-center gap-3 p-3 mb-2 bg-gray-50 rounded-xl">
             <Search size={20} className="text-gray-400" />
@@ -381,7 +387,7 @@ export default function SimuladorUber() {
             {busca && <button onClick={() => setBusca('')}><X size={18} className="text-gray-400" /></button>}
           </div>
           {!busca && (
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-2 pb-2 overflow-x-auto">
               {[
                 { label: 'Casa', icon: <Home size={16} />, local: CASA },
                 { label: 'Trabalho', icon: <Briefcase size={16} />, local: TRABALHO },
@@ -400,7 +406,7 @@ export default function SimuladorUber() {
           <p className="px-4 mb-2 text-xs font-semibold text-gray-400">{txt('DESTINOS EM RIO LARGO E MACEIO')}</p>
           {destinosFiltrados.map((d, i) => (
             <button key={i} onClick={() => { setDestino(d); setTela('home'); }}
-              className="flex items-center gap-3 w-full p-4 text-left hover:bg-gray-50 border-b border-gray-50">
+              className="flex items-center w-full gap-3 p-4 text-left border-b hover:bg-gray-50 border-gray-50">
               <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                 <MapPin size={20} className="text-gray-600" />
               </div>
@@ -426,34 +432,63 @@ export default function SimuladorUber() {
   // ─── BUSCANDO ──────────────────────────────────────────
   if (tela === 'buscando') {
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div className="flex flex-col items-center justify-center h-full px-5 text-center">
-          <button onClick={voltarHome} className="absolute p-2 top-4 left-4 rounded-full hover:bg-gray-100">
+          <button onClick={voltarHome} className="absolute p-2 rounded-full top-4 left-4 hover:bg-gray-100">
             <ArrowLeft size={24} className="text-gray-700" />
           </button>
-          <div className="w-16 h-16 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-            <Car size={32} className="text-gray-700" />
-          </div>
-          <h2 className="mb-2 text-xl font-bold text-gray-800">{txt('Buscando motorista...')}</h2>
-          <p className="mb-1 text-sm text-gray-500">{txt('Procurando o motorista mais proximo')}</p>
-          <p className="text-xs text-gray-400">
-            {destino ? txt(destino.nome) : ''}
-          </p>
-          <div className="flex justify-center gap-2 mt-6">
-            {[0, 1, 2].map(i => (
-              <div key={i} className="w-3 h-3 bg-gray-800 rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.2}s` }} />
-            ))}
-          </div>
-          <style jsx>{`
-            .animate-bounce { animation: bounceDots 1.2s infinite; }
-            @keyframes bounceDots {
-              0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
-              40% { transform: translateY(-12px); opacity: 1; }
-            }
-          `}</style>
-          <p className="mt-6 text-sm text-gray-400">{txt('Tempo estimado: 2-5 min')}</p>
+
+          {!motoristaEncontrado ? (
+            <>
+              <div className="flex items-center justify-center w-16 h-16 mb-6 bg-gray-100 rounded-full">
+                <Car size={32} className="text-gray-700" />
+              </div>
+              <h2 className="mb-2 text-xl font-bold text-gray-800">{txt('Buscando motorista...')}</h2>
+              <p className="mb-1 text-sm text-gray-500">{txt('Procurando o motorista mais proximo')}</p>
+              <p className="text-xs text-gray-400">
+                {destino ? txt(destino.nome) : ''}
+              </p>
+              <div className="flex justify-center gap-2 mt-6">
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="w-3 h-3 bg-gray-800 rounded-full animate-bounce"
+                    style={{ animationDelay: `${i * 0.2}s` }} />
+                ))}
+              </div>
+              <style jsx>{`
+                .animate-bounce { animation: bounceDots 1.2s infinite; }
+                @keyframes bounceDots {
+                  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+                  40% { transform: translateY(-12px); opacity: 1; }
+                }
+              `}</style>
+              <p className="mt-6 text-sm text-gray-400">{txt('Tempo estimado: 2-5 min')}</p>
+            </>
+          ) : (
+            <>
+              <div className="w-full max-w-xs p-5 mb-4 text-left bg-gray-50 rounded-2xl">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center bg-gray-200 rounded-full w-14 h-14">
+                    <User size={28} className="text-gray-500" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-800">{txt(MOTORISTA_BASE.nome)}</p>
+                    <p className="text-sm text-gray-500">{MOTORISTA_BASE.carro} • {MOTORISTA_BASE.placa}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <Star size={14} className="text-yellow-500" fill="#eab308" />
+                      <span className="text-sm font-semibold text-gray-700">{MOTORISTA_BASE.avaliacao}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 className="mb-2 text-xl font-bold text-gray-800">{txt('Motorista encontrado!')}</h2>
+              <p className="mb-6 text-sm text-gray-500">{txt('Confira os dados antes de continuar')}</p>
+              <button onClick={() => setTela('aCaminho')}
+                className="w-full max-w-xs py-4 text-lg font-bold text-white transition-all bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95">
+                {txt('Confirmar motorista')}
+              </button>
+            </>
+          )}
         </div>
       </div>
     );
@@ -464,13 +499,13 @@ export default function SimuladorUber() {
     const tempoChegada = 10;
 
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div className="flex flex-col h-full">
-          <div className="px-5 py-4 bg-gray-50 border-b">
+          <div className="px-5 py-4 border-b bg-gray-50">
             <button onClick={voltarHome} className="p-1 mb-3"><ArrowLeft size={24} className="text-gray-700" /></button>
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-200 rounded-full">
                 <User size={32} className="text-gray-500" />
               </div>
               <div className="flex-1">
@@ -491,7 +526,7 @@ export default function SimuladorUber() {
           {/* Barra de progresso de chegada */}
           <div className="px-5 pt-6 pb-2">
             <p className="mb-2 text-sm text-gray-500">{txt('Motorista a caminho do ponto de partida')}</p>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 overflow-hidden bg-gray-200 rounded-full">
               <div className="h-full bg-blue-600 rounded-full animate-progress-bar" />
             </div>
             <style jsx>{`
@@ -519,59 +554,91 @@ export default function SimuladorUber() {
 
           <div className="p-4 space-y-2 bg-white border-t">
             <div className="flex gap-2">
-              <button className="flex items-center justify-center gap-2 flex-1 py-3 bg-gray-100 rounded-2xl hover:bg-gray-200">
+              <button onClick={() => setChatAberto(true)}
+                className="flex items-center justify-center flex-1 gap-2 py-3 bg-gray-100 rounded-2xl hover:bg-gray-200">
                 <MessageCircle size={20} className="text-gray-700" />
                 <span className="text-sm font-semibold text-gray-700">{txt('Chat')}</span>
               </button>
-              <button className="flex items-center justify-center gap-2 py-3 px-5 bg-gray-100 rounded-2xl hover:bg-gray-200">
+              <button className="flex items-center justify-center gap-2 px-5 py-3 bg-gray-100 rounded-2xl hover:bg-gray-200">
                 <Phone size={20} className="text-gray-700" />
               </button>
-              <button className="flex items-center justify-center gap-2 py-3 px-5 bg-gray-100 rounded-2xl hover:bg-gray-200">
+              <button className="flex items-center justify-center gap-2 px-5 py-3 bg-gray-100 rounded-2xl hover:bg-gray-200">
                 <Shield size={20} className="text-gray-700" />
               </button>
             </div>
             <button onClick={() => { setProgresso(0); setTela('viagem'); }}
-              className="w-full py-4 text-lg font-bold text-white bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95 transition-all">
+              className="w-full py-4 text-lg font-bold text-white transition-all bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95">
               {txt('Motorista chegou — Iniciar viagem')}
             </button>
           </div>
         </div>
-        <BtnAcessibilidade onToggle={toggleUppercase} isActive={isUppercase} />
+
+        {/* Chat com o motorista */}
+        {chatAberto && (
+          <div className="absolute inset-0 z-30 flex items-end justify-center bg-black/40"
+            onClick={() => setChatAberto(false)}>
+            <div className="w-full max-w-md p-4 bg-white rounded-t-3xl" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-4">
+                <p className="font-bold text-gray-800">{txt(MOTORISTA_BASE.nome)}</p>
+                <button onClick={() => setChatAberto(false)} className="p-1 rounded-full hover:bg-gray-100">
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+              <div className="flex justify-start mb-4">
+                <div className="max-w-[75%] px-4 py-2 text-white bg-blue-600 rounded-2xl rounded-bl-sm">
+                  {txt('Boa noite, estou no local.')}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <BotaoAcessibilidade
+          onToggleMaiusculo={toggleUppercase}
+          maiusculoAtivo={isUppercase}
+          cor="bg-gray-800 hover:bg-gray-900"
+          posicao="bottom-24 right-4"
+        />
       </div>
     );
   }
 
   // ─── EM VIAGEM ─────────────────────────────────────────
   if (tela === 'viagem') {
+    const chegouAoDestino = progresso >= 100;
     const minutosRestantes = Math.ceil((100 - progresso) * 0.22);
 
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div className="flex flex-col h-full">
-          <MapaFundo origem={ORIGEM} destino={destino || undefined} className="flex-1" />
+          <MapaFundo origem={ORIGEM} destino={destino || undefined} className="relative flex-1" />
 
           <div className="p-4 bg-white border-t">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-xs text-gray-500">{txt('Tempo restante')}</p>
-                <p className="text-sm font-bold text-gray-800">{minutosRestantes} min</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-gray-500">{txt('Previsao de chegada')}</p>
                 <p className="text-sm font-bold text-gray-800">
-                  {new Date(Date.now() + minutosRestantes * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  {chegouAoDestino ? txt('Voce chegou') : `${minutosRestantes} min`}
                 </p>
               </div>
+              {!chegouAoDestino && (
+                <div className="text-right">
+                  <p className="text-xs text-gray-500">{txt('Previsao de chegada')}</p>
+                  <p className="text-sm font-bold text-gray-800">
+                    {new Date(Date.now() + minutosRestantes * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Barra de progresso */}
-            <div className="h-2 mb-4 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progresso}%` }} />
+            <div className="h-2 mb-4 overflow-hidden bg-gray-200 rounded-full">
+              <div className="h-full transition-all duration-300 bg-blue-600 rounded-full" style={{ width: `${progresso}%` }} />
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full">
                 <User size={16} className="text-gray-600" />
               </div>
               <div className="flex-1">
@@ -581,6 +648,13 @@ export default function SimuladorUber() {
               <button className="p-2 rounded-full hover:bg-gray-100"><Phone size={20} className="text-gray-600" /></button>
               <button className="p-2 rounded-full hover:bg-gray-100"><Shield size={20} className="text-gray-600" /></button>
             </div>
+
+            {chegouAoDestino && (
+              <button onClick={() => setTela('chegou')}
+                className="w-full py-4 text-lg font-bold text-white transition-all bg-green-600 rounded-2xl hover:bg-green-700 active:scale-95">
+                {txt('Confirmar chegada ao destino')}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -592,7 +666,7 @@ export default function SimuladorUber() {
     const preco = Math.round(precoBase * opcaoAtual.multiplicador * 100) / 100;
 
     return (
-      <div className="relative h-screen w-full max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
+      <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-white shadow-2xl md:rounded-3xl"
         style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div className="flex flex-col items-center justify-center h-full p-6 text-center">
           <div className="flex items-center justify-center w-20 h-20 mb-4 bg-green-100 rounded-full">
@@ -611,12 +685,12 @@ export default function SimuladorUber() {
               <hr className="border-gray-200" />
               <div className="flex justify-between">
                 <span className="text-gray-500">{txt('Origem')}</span>
-                <span className="text-right text-xs">{txt(ORIGEM.endereco)}</span>
+                <span className="text-xs text-right">{txt(ORIGEM.endereco)}</span>
               </div>
               <hr className="border-gray-200" />
               <div className="flex justify-between">
                 <span className="text-gray-500">{txt('Destino')}</span>
-                <span className="text-right text-xs">{destino ? txt(destino.nome) : ''}</span>
+                <span className="text-xs text-right">{destino ? txt(destino.nome) : ''}</span>
               </div>
               <hr className="border-gray-200" />
               <div className="flex justify-between">
@@ -645,16 +719,21 @@ export default function SimuladorUber() {
 
           <div className="w-full space-y-2">
             <button onClick={voltarHome}
-              className="w-full py-4 text-lg font-bold text-white bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95 transition-all">
+              className="w-full py-4 text-lg font-bold text-white transition-all bg-gray-900 rounded-2xl hover:bg-gray-800 active:scale-95">
               {txt('Pedir nova viagem')}
             </button>
             <button onClick={voltarHome}
-              className="w-full py-3 font-semibold text-gray-500 rounded-2xl hover:bg-gray-100 transition-colors">
+              className="w-full py-3 font-semibold text-gray-500 transition-colors rounded-2xl hover:bg-gray-100">
               {txt('Voltar ao inicio')}
             </button>
           </div>
         </div>
-        <BtnAcessibilidade onToggle={toggleUppercase} isActive={isUppercase} />
+        <BotaoAcessibilidade
+          onToggleMaiusculo={toggleUppercase}
+          maiusculoAtivo={isUppercase}
+          cor="bg-gray-800 hover:bg-gray-900"
+          posicao="bottom-24 right-4"
+        />
       </div>
     );
   }

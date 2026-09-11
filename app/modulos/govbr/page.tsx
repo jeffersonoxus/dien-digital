@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, X, ChevronRight, Check, Shield,
+  X, ChevronRight, Check, Shield,
   FileText, Clipboard, CreditCard, Car, Heart,
-  User, Calendar, MapPin, Bell, Search, Activity,
-  AlignJustify, Smartphone, Key, Eye, EyeOff
+  User, Calendar, MapPin, Bell, Search,
+  Smartphone, Key, Eye, EyeOff
 } from 'lucide-react';
+import { BotaoAcessibilidade } from '@/components/BotaoAcessibilidade';
+import { BotaoVoltar } from '@/components/BotaoVoltar';
 
 type Tela =
   | 'home' | 'cpf' | 'inss' | 'carteira-trabalho' | 'rg' | 'cnh'
@@ -29,30 +31,6 @@ const DADOS_USUARIO: DadosCadastrais = {
   email: 'carlos.alberto@email.com',
 };
 
-function AcessibilidadeBtn({ onToggle, isActive }: { onToggle: () => void; isActive: boolean }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="fixed z-50 bottom-24 right-4">
-      <button onClick={() => setOpen(!open)}
-        className="p-3 text-white bg-blue-700 rounded-full shadow-lg hover:bg-blue-800">
-        <Activity size={24} />
-      </button>
-      {open && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          className="absolute right-0 p-3 space-y-2 bg-white rounded-2xl shadow-xl bottom-16 min-w-[200px]">
-          <p className="px-2 text-xs text-gray-400">Acessibilidade</p>
-          <button onClick={() => { onToggle(); setOpen(false); }}
-            className="flex items-center w-full gap-3 px-3 py-2 rounded-xl hover:bg-gray-100">
-            <AlignJustify size={18} className="text-blue-700" />
-            <span className="text-sm text-gray-700">Texto em CAIXA ALTA</span>
-            {isActive && <span className="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Ativo</span>}
-          </button>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
 export default function SimuladorGovBr() {
   const [tela, setTela] = useState<Tela>('home');
   const [isUppercase, setIsUppercase] = useState(false);
@@ -72,11 +50,7 @@ export default function SimuladorGovBr() {
 
   const Header = ({ titulo, onBack }: { titulo: string; onBack?: () => void }) => (
     <div className="flex items-center justify-between px-4 py-3 bg-blue-700">
-      {onBack ? (
-        <button onClick={onBack} className="p-1"><ArrowLeft size={24} className="text-white" /></button>
-      ) : (
-        <button onClick={() => window.location.href = '/'} className="p-1"><ArrowLeft size={24} className="text-white" /></button>
-      )}
+      <BotaoVoltar onClick={onBack} />
       <div className="text-center">
         <h1 className="text-sm font-bold text-white">{txt('Gov.br')}</h1>
         <p className="text-[10px] text-white/70">{txt(titulo)}</p>
@@ -559,7 +533,12 @@ export default function SimuladorGovBr() {
         {tela === 'auxilio' && (<motion.div key="auxilio" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -100, opacity: 0 }} className="h-full"><TelaAuxilio /></motion.div>)}
         {tela === 'titulo-eleitor' && (<motion.div key="titulo" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -100, opacity: 0 }} className="h-full"><TelaTituloEleitor /></motion.div>)}
       </AnimatePresence>
-      <AcessibilidadeBtn onToggle={toggleUppercase} isActive={isUppercase} />
+      <BotaoAcessibilidade
+        onToggleMaiusculo={toggleUppercase}
+        maiusculoAtivo={isUppercase}
+        cor="bg-blue-700 hover:bg-blue-800"
+        posicao="bottom-24 right-4"
+      />
     </div>
   );
 }
