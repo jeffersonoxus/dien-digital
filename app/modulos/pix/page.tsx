@@ -66,6 +66,21 @@ const EXTRATO: Transacao[] = [
   { id: '6', data: '05/03/2024', hora: '08:00', descricao: 'PIX recebido - Auxílio', valor: 600.00, tipo: 'entrada', nome: 'MIN. DA CIDADANIA' },
 ];
 
+// ─── Exemplos de chave (servem de guia ao digitar) ─────────
+const EXEMPLOS_CHAVE: Record<ChavePix['tipo'], { exemplo: string; nome: string }> = {
+  cpf: { exemplo: '123.456.789-00', nome: 'Maria Aparecida Souza' },
+  telefone: { exemplo: '(82) 99999-1234', nome: 'Carlos Eduardo Santos' },
+  email: { exemplo: 'joao@email.com', nome: 'João Pedro Oliveira' },
+  aleatoria: { exemplo: '8a7b-3c2d-4e5f-6g7h', nome: 'MERCADO BOM PREÇO LTDA' },
+};
+
+function getDestinatarioPorChave(tipo: ChavePix['tipo'], valor: string): string {
+  if (valor.trim().toLowerCase() === EXEMPLOS_CHAVE[tipo].exemplo.toLowerCase()) {
+    return EXEMPLOS_CHAVE[tipo].nome;
+  }
+  return 'MERCADO BOM PREÇO LTDA';
+}
+
 // ─── Helpers ──────────────────────────────────────────────
 const formatarMoeda = (v: number) =>
   v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -131,7 +146,7 @@ export default function SimuladorPix() {
   const [tipoChave, setTipoChave] = useState<ChavePix['tipo']>('cpf');
   const [valorPix, setValorPix] = useState('');
   const [senha, setSenha] = useState('');
-  const [destinatario] = useState('MERCADO BOM PREÇO LTDA');
+  const destinatario = getDestinatarioPorChave(tipoChave, chaveSelecionada);
   const [mostrarSaldo, setMostrarSaldo] = useState(true);
   const [senhaErrada, setSenhaErrada] = useState(false);
   const [isUppercase, setIsUppercase] = useState(false);
@@ -346,7 +361,7 @@ export default function SimuladorPix() {
 
         <p className="mb-3 text-sm text-gray-500">{txt('Ou digite uma chave PIX:')}</p>
 
-        {(['cpf', 'telefone', 'email', 'aleatoria'] as ChavePix['tipo'][]).map((tipo) => {
+        {(['cpf', 'telefone', 'email'] as ChavePix['tipo'][]).map((tipo) => {
           const ativo = tipoChave === tipo;
           return (
             <button key={tipo} onClick={() => setTipoChave(tipo)}
@@ -362,7 +377,6 @@ export default function SimuladorPix() {
                   {tipo === 'cpf' && txt('Use o CPF de quem vai receber')}
                   {tipo === 'email' && txt('Use o e-mail de quem vai receber')}
                   {tipo === 'telefone' && txt('Use o telefone de quem vai receber')}
-                  {tipo === 'aleatoria' && txt('Use o código gerado pelo banco')}
                 </p>
               </div>
               {ativo && <div className="w-5 h-5 bg-orange-600 rounded-full flex items-center justify-center"><Check size={14} className="text-white" /></div>}
@@ -376,15 +390,18 @@ export default function SimuladorPix() {
             {tipoChave === 'cpf' && txt('Digite o CPF (só números):')}
             {tipoChave === 'email' && txt('Digite o e-mail:')}
             {tipoChave === 'telefone' && txt('Digite o telefone com DDD:')}
-            {tipoChave === 'aleatoria' && txt('Digite a chave aleatória:')}
           </p>
           <input
             type="text"
             value={chaveSelecionada}
             onChange={(e) => setChaveSelecionada(e.target.value)}
-            placeholder={tipoChave === 'cpf' ? '123.456.789-00' : tipoChave === 'email' ? 'exemplo@email.com' : tipoChave === 'telefone' ? '(11) 99999-9999' : '8a7b-3c2d-4e5f-6g7h'}
+            placeholder={EXEMPLOS_CHAVE[tipoChave].exemplo}
             className="w-full p-3 text-lg text-gray-800 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-orange-400"
           />
+          <div className="flex items-center gap-2 p-2.5 mt-2 text-sm bg-gray-50 rounded-lg">
+            <span className="text-gray-400">{txt('Formato:')}</span>
+            <span className="font-medium text-gray-600">{EXEMPLOS_CHAVE[tipoChave].exemplo}</span>
+          </div>
           {chaveSelecionada.length >= 3 && (
             <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2 p-3 mt-3 bg-green-50 rounded-xl">
