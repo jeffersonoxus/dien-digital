@@ -187,17 +187,17 @@ export default function ModuloSimuladorAgendamento() {
 
       case 11:
         setDados(prev => ({ ...prev, nome: opcao }));
-        adicionarMensagem(`✅ Nome registrado: ${opcao}\n\nQual unidade de saúde você prefere?\n\n1 - Unidade Central\n2 - Unidade Norte\n3 - Unidade Sul\n4 - Unidade Leste\n5 - Unidade Oeste`, 'bot');
+        adicionarMensagem(`✅ Nome registrado: ${opcao}\n\nQual unidade de saúde você prefere?\n\n1 - UPA - Rio Largo (UPA Pedro Carlos da Silva Sobrinho)\n2 - Hospital Geral Professor Ib Gatto Falcão\n3 - UBS Manoel Gonçalves da Silva 3\n4 - Posto de Saúde Jeronimo de Barros\n5 - Centro de Saúde Eduardo Campos`, 'bot');
         setEtapa(12);
         break;
 
       case 12:
         const unidades: {[key: string]: string} = {
-          '1': 'Unidade Central',
-          '2': 'Unidade Norte',
-          '3': 'Unidade Sul',
-          '4': 'Unidade Leste',
-          '5': 'Unidade Oeste'
+          '1': 'UPA - Rio Largo (UPA Pedro Carlos da Silva Sobrinho)',
+          '2': 'Hospital Geral Professor Ib Gatto Falcão',
+          '3': 'UBS Manoel Gonçalves da Silva 3',
+          '4': 'Posto de Saúde Jeronimo de Barros',
+          '5': 'Centro de Saúde Eduardo Campos'
         };
         
         if (unidades[opcao]) {
